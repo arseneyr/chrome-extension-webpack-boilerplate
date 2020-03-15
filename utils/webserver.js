@@ -4,8 +4,15 @@ var WebpackDevServer = require("webpack-dev-server"),
   env = require("./env"),
   path = require("path");
 
+// Webpack uses this path to fetch the manifest + hot update chunks.
+// Not setting it for content scripts or scripts injected into client
+// pages causes webpack to fetch from a relative path.
+
 config.output.publicPath = `http://127.0.0.1:${env.PORT}/`;
-var wdsConfig = {
+
+var compiler = webpack(config);
+
+var server = new WebpackDevServer(compiler, {
   hot: true,
   contentBase: path.join(__dirname, "../build"),
   sockPort: env.PORT,
@@ -14,21 +21,8 @@ var wdsConfig = {
   },
   disableHostCheck: true,
   host: "127.0.0.1",
-  transportMode: "ws"
-};
-
-WebpackDevServer.addDevServerEntrypoints(config, wdsConfig);
-
-if (config.entry.injected) {
-  config.entry.injected[
-    config.entry.injected.findIndex(e => e.includes("webpack-dev-server"))
-  ] = path.join(__dirname, "./injected_hmr.js");
-}
-
-wdsConfig.injectClient = false;
-
-var compiler = webpack(config);
-
-var server = new WebpackDevServer(compiler, wdsConfig);
+  transportMode: "ws",
+  writeToDisk: true
+});
 
 server.listen(env.PORT);

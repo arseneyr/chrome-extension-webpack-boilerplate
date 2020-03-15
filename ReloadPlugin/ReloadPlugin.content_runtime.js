@@ -20,7 +20,7 @@ module.exports = function() {
   // eslint-disable-next-line no-unused-vars
   function hotDownloadUpdateChunk(chunkId) {
     fetch($require$.p + $hotChunkFilename$)
-      .then(res => res.text)
+      .then(res => res.text())
       .then(eval);
   }
 

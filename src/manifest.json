@@ -17,7 +17,6 @@
       "js": ["content.bundle.js"]
     }
   ],
-  "web_accessible_resources": ["injected.bundle.js", "injected.hot-update.js"],
   "manifest_version": 2,
   "permissions": ["webRequest", "<all_urls>"]
 }
