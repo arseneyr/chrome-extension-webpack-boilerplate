@@ -78,6 +78,21 @@ var options = {
     new CleanWebpackPlugin(),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin({ NODE_ENV: "development" }),
+    new CopyWebpackPlugin([
+      {
+        from: "./manifest.json",
+        transform: function(content, path) {
+          // generates the manifest file using the package.json informations
+          return Buffer.from(
+            JSON.stringify({
+              description: process.env.npm_package_description,
+              version: process.env.npm_package_version,
+              ...JSON.parse(content.toString())
+            })
+          );
+        }
+      }
+    ]),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "popup.html"),
       filename: "popup.html",
@@ -98,7 +113,7 @@ var options = {
 };
 
 if (env.NODE_ENV === "development") {
-  options.devtool = "cheap-module-eval-source-map";
+  options.devtool = "inline-cheap-module-source-map";
 }
 
 module.exports = options;

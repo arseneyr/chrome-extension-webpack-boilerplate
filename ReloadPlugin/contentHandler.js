@@ -1,12 +1,9 @@
-const url = require("url"),
-  { generateRuntime } = require("./utils");
+const { generateRuntime } = require("./utils");
 
 class ContentScriptHandler {
   constructor(contentScripts, backgroundScript) {
     this.contentScripts = contentScripts;
     this.backgroundScript = backgroundScript;
-    this.hotCspDomains = new Set();
-    this.hot = false;
   }
 
   apply(compiler) {
@@ -16,26 +13,7 @@ class ContentScriptHandler {
         for (const [index, entry] of []
           .concat(compiler.options.entry[content])
           .entries()) {
-          const match = entry.match(/webpack-dev-server.*\?(.+)$/);
-          if (match) {
-            // Add the webpack-dev-server socket domain to the content-security-policy
-            // by parsing the query string similarly to how the WDS client does it.
-            // See https://git.io/JvPvN
-
-            const { auth, query, hostname, protocol, port } = url.parse(
-              match[1].replace("&", "?"),
-              true
-            );
-
-            this.hotCspDomains.add(
-              url.format({
-                protocol,
-                auth,
-                hostname: query.sockHost || hostname,
-                port: query.sockPort || port
-              })
-            );
-          } else if (entry === require.resolve("webpack/hot/dev-server")) {
+          if (entry === require.resolve("webpack/hot/dev-server")) {
             // For hot updates that are unaccepted or failed, use our own
             // dev-server script that 1) sends a message to the background
             // script to reload the extension and 2) reloads the page
@@ -72,8 +50,6 @@ class ContentScriptHandler {
           ...tap,
           name: "ReloadPlugin",
           fn: (source, chunk, hash) => {
-            this.hot = true;
-
             if (this.contentScripts.includes(chunk.name)) {
               return generateRuntime(
                 require("./content.runtime"),
@@ -87,21 +63,6 @@ class ContentScriptHandler {
         })
       });
     });
-  }
-  transformManifest(manifest) {
-    if (this.hot) {
-      const newCsp = [
-        `script-src 'self' 'unsafe-eval' ${Array.from(this.hotCspDomains).join(
-          " "
-        )}`,
-        `object-src 'self'`
-      ];
-      manifest.content_security_policy = newCsp
-        .concat(manifest.content_security_policy || [])
-        .join("; ");
-    }
-
-    return manifest;
   }
 }
 

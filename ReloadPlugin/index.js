@@ -1,6 +1,6 @@
 const path = require("path"),
   fs = require("fs-extra"),
-  ContentScriptHandler = require("./content");
+  ContentScriptHandler = require("./contentHandler");
 
 class ReloadPlugin {
   constructor(opts) {
@@ -8,8 +8,7 @@ class ReloadPlugin {
       {
         manifest: "manifest.json",
         contentScripts: [],
-        backgroundScript: null,
-        transformManifest: m => m
+        backgroundScript: null
       },
       opts || {}
     );
@@ -27,23 +26,6 @@ class ReloadPlugin {
     );
 
     this.contentScriptHandler.apply(compiler);
-
-    compiler.hooks.emit.tapPromise("ReloadPlugin", compilation =>
-      fs.readFile(manifestPath, "utf8").then(json => {
-        const manifest = [
-          this.contentScriptHandler.transformManifest.bind(
-            this.contentScriptHandler
-          ),
-          this.opts.transformManifest
-        ].reduce((acc, cur) => cur(acc), JSON.parse(json));
-
-        const manifestString = JSON.stringify(manifest, null, 2);
-        compilation.assets["manifest.json"] = {
-          source: () => manifestString,
-          size: () => Buffer.byteLength(manifestString, "utf8")
-        };
-      })
-    );
   }
 }
 
