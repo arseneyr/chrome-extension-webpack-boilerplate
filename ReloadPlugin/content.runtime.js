@@ -67,7 +67,7 @@ module.exports = function() {
     });
   }
 
-  window.addEventListener("message", ({ data }) => {
+  /*window.addEventListener("message", ({ data }) => {
     if (data.downloadManifest) {
       fetch(data.downloadManifest)
         .then(res => res.json())
@@ -79,5 +79,5 @@ module.exports = function() {
       s.src = chrome.runtime.getURL(data.downloadChunk);
       (document.head || document.documentElement).appendChild(s);
     }
-  });
+  });*/
 };

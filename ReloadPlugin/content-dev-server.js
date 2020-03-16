@@ -8,6 +8,11 @@ if (module.hot) {
   var upToDate = function upToDate() {
     return lastHash.indexOf(__webpack_hash__) >= 0;
   };
+  var reload = function reload() {
+    chrome.runtime.sendMessage({ __hmrReload__: true }, () =>
+      window.location.reload()
+    );
+  };
   var log = require("webpack/hot/log");
   var check = function check() {
     module.hot
@@ -19,9 +24,7 @@ if (module.hot) {
             "warning",
             "[HMR] (Probably because of restarting the webpack-dev-server)"
           );
-          chrome.runtime.sendMessage({ reload: true }, () =>
-            window.location.reload()
-          );
+          reload();
           return;
         }
 
@@ -43,9 +46,7 @@ if (module.hot) {
             "[HMR] Cannot apply update. Need to do a full reload!"
           );
           log("warning", "[HMR] " + log.formatError(err));
-          chrome.runtime.sendMessage({ reload: true }, () =>
-            window.location.reload()
-          );
+          reload();
         } else {
           log("warning", "[HMR] Update failed: " + log.formatError(err));
         }

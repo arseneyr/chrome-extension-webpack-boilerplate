@@ -81,30 +81,6 @@ var options = {
     new CleanWebpackPlugin(),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin({ NODE_ENV: "development" }),
-    /*new CopyWebpackPlugin(
-      [
-        {
-          from: "manifest.json",
-          transform: function(content, path) {
-            // generates the manifest file using the package.json informations
-            return Buffer.from(
-              JSON.stringify({
-                description: process.env.npm_package_description,
-                version: process.env.npm_package_version,
-                content_security_policy: `script-src 'self'${
-                  env.NODE_ENV === "development"
-                    ? // allow for hot module reloading
-                      ` 'unsafe-eval' http://127.0.0.1:${env.PORT}`
-                    : ""
-                }; object-src 'self'`,
-                ...JSON.parse(content.toString())
-              })
-            );
-          }
-        }
-      ],
-      { copyUnmodified: true }
-    ),*/
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "popup.html"),
       filename: "popup.html",
