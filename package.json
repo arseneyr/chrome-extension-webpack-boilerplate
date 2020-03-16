@@ -4,7 +4,8 @@
   "description": "A boilerplate to chrome extension with webpack",
   "scripts": {
     "build": "node utils/build.js",
-    "start": "node utils/webserver.js"
+    "start": "node utils/webserver.js",
+    "debug": "node --lazy --inspect-brk=9229 --preserve-symlinks --preserve-symlinks-main utils/webserver.js"
   },
   "dependencies": {
     "react": "16.12.0",
