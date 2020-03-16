@@ -1,7 +1,12 @@
+/*
+  Copied from https://git.io/JvPvp
+
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 const { Template } = require("webpack");
 
-// Copied from https://github.com/webpack/webpack/blob/71be3bfa45a55aa8ea1b954ab1302565bb073bbc/lib/web/JsonpMainTemplatePlugin.js#L557-L608
-function generateLoadSource(runtimeTemplate, mainTemplate, source, hash) {
+function generateRuntime(runtimeTemplate, mainTemplate, source, hash) {
   const globalObject = mainTemplate.outputOptions.globalObject;
   const hotUpdateChunkFilename =
     mainTemplate.outputOptions.hotUpdateChunkFilename;
@@ -48,4 +53,4 @@ var parentHotUpdateCallback = ${globalObject}[${JSON.stringify(
 ${globalObject}[${JSON.stringify(hotUpdateFunction)}] = ${runtimeSource}`;
 }
 
-module.exports = { generateLoadSource };
+module.exports = { generateRuntime };
