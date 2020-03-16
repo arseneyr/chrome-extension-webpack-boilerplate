@@ -23,6 +23,12 @@ if (copyPluginIndex !== -1) {
       from: "./manifest.json",
       transform: function(content) {
         var manifest = JSON.parse(content.toString());
+        var content_security_policy =
+          (manifest.content_security_policy
+            ? manifest.content_security_policy + "; "
+            : "") +
+          `script-src 'self' ${config.output.publicPath}; object-src 'self'`;
+
         // generates the manifest file using the package.json informations
         return Buffer.from(
           JSON.stringify(
@@ -30,11 +36,7 @@ if (copyPluginIndex !== -1) {
               description: process.env.npm_package_description,
               version: process.env.npm_package_version,
               ...manifest,
-              content_security_policy:
-                (manifest.content_security_policy
-                  ? manifest.content_security_policy + "; "
-                  : "") +
-                `script-src 'self' ${config.output.publicPath}; object-src 'self'`
+              content_security_policy
             },
             null,
             2
