@@ -66,18 +66,4 @@ module.exports = function() {
       };
     });
   }
-
-  /*window.addEventListener("message", ({ data }) => {
-    if (data.downloadManifest) {
-      fetch(data.downloadManifest)
-        .then(res => res.json())
-        .then(manifest =>
-          window.postMessage({ downloadManifestResponse: manifest }, "*")
-        );
-    } else if (data.downloadChunk) {
-      const s = document.createElement("script");
-      s.src = chrome.runtime.getURL(data.downloadChunk);
-      (document.head || document.documentElement).appendChild(s);
-    }
-  });*/
 };
