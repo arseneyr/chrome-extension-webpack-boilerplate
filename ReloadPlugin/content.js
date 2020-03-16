@@ -13,9 +13,9 @@ class ContentScriptHandler {
     compiler.hooks.compile.tap("ReloadPlugin", () => {
       let needReloadServer = false;
       for (const content of this.contentScripts) {
-        for (const [index, entry] of compiler.options.entry[
-          content
-        ].entries()) {
+        for (const [index, entry] of []
+          .concat(compiler.options.entry[content])
+          .entries()) {
           const match = entry.match(/webpack-dev-server.*\?(.+)$/);
           if (match) {
             // Add the webpack-dev-server socket domain to the content-security-policy
