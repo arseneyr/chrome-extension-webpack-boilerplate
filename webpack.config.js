@@ -41,8 +41,7 @@ var options = {
   },
   output: {
     path: path.join(__dirname, "build"),
-    filename: "[name].bundle.js",
-    hotUpdateChunkFilename: "[id].hot-update.js"
+    filename: "[name].bundle.js"
   },
   module: {
     rules: [
@@ -66,7 +65,6 @@ var options = {
   resolve: {
     alias: alias
   },
-  node: false,
   plugins: [
     new ReloadPlugin({
       contentScripts: ["content"],
@@ -101,7 +99,7 @@ var options = {
 };
 
 if (env.NODE_ENV === "development") {
-  options.devtool = "inline-source-map";
+  options.devtool = "cheap-module-eval-source-map";
 }
 
 module.exports = options;
