@@ -3,7 +3,6 @@ var webpack = require("webpack"),
   fileSystem = require("fs"),
   env = require("./utils/env"),
   CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
-  CopyWebpackPlugin = require("copy-webpack-plugin"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
   WriteFilePlugin = require("write-file-webpack-plugin"),
   ReloadPlugin = require("./ReloadPlugin");
